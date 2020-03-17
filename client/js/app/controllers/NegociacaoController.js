@@ -14,8 +14,9 @@ class NegociacaoController {
 
                 if (['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)) {
                     return function () {
-                        Reflect.apply(target[prop], target, arguments);
+                        let retorno = Reflect.apply(target[prop], target, arguments);
                         self._negociacoesView.update(target);
+                        return retorno;
                     }
                 }
 
