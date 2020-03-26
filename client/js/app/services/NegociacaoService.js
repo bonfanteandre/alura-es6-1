@@ -1,24 +1,52 @@
 class NegociacaoService {
 
-    obterNegociacoesDaSemana(cb) {
+    constructor() {
+        this._http = new HttpService();
+    }
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'negociacoes/semana');
+    obterNegociacoesDaSemana() {
 
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                let negociacoes = JSON.parse(xhr.responseText)
-                    .map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor));
+        return new Promise((resolve, reject) => {
 
-                cb(null, negociacoes);
+            this._http.get('negociacoes/semana')
+                .then(negociacoes => {
+                    resolve(negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)));
+                })
+                .catch(erro => {
+                    console.log(erro);
+                    reject('Não foi possível importar as negociações da semana');
+                });
+        });
+    }
 
-            } else {
-                console.log(xhr.responseText);
-                cb('Não foi possível importar as negociações', null);
-            }
-        };
+    obterNegociacoesDaSemanaAnterior() {
 
-        xhr.send();
+        return new Promise((resolve, reject) => {
+
+            this._http.get('negociacoes/anterior')
+                .then(negociacoes => {
+                    resolve(negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)));
+                })
+                .catch(erro => {
+                    console.log(erro);
+                    reject('Não foi possível importar as negociações da semana anterior');
+                });
+        });
+    }
+
+    obterNegociacoesDaSemanaRetrasada() {
+
+        return new Promise((resolve, reject) => {
+
+            this._http.get('negociacoes/retrasada')
+                .then(negociacoes => {
+                    resolve(negociacoes.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)));
+                })
+                .catch(erro => {
+                    console.log(erro);
+                    reject('Não foi possível importar as negociações da semana retrasada');
+                });
+        });
     }
 
 }
