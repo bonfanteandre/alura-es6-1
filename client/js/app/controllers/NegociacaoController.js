@@ -26,7 +26,11 @@ class NegociacaoController {
             .getConnection()
             .then(connection => new NegociacaoDao(connection))
             .then(dao => dao.lista())
-            .then(negociacoes => negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)));
+            .then(negociacoes => negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)))
+            .catch(erro => {
+                console.log(erro);
+                this._mensagem.texto = 'Não foi possível listar as negociações';
+            });
     }
 
     adiciona(event) {
