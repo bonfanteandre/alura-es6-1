@@ -49,4 +49,20 @@ class NegociacaoDao {
             };
         });
     }
+
+    truncar() {
+        return new Promise((resolve, reject) => {
+            
+            let request = this._connection
+                .transaction([this._store], 'readwrite')
+                .objectStore(this._store)
+                .clear();
+
+            request.onsuccess = e => resolve();
+            request.onerror = e => {
+                console.log(e.target.error);
+                reject('Não foi possível truncar as negociações');
+            };
+        });
+    }
 }
