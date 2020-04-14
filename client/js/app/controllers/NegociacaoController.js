@@ -21,6 +21,12 @@ class NegociacaoController {
         );
 
         this._ordemAtual = '';
+
+        ConnectionFactory
+            .getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.lista())
+            .then(negociacoes => negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao)));
     }
 
     adiciona(event) {
