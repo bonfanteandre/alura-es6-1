@@ -1,29 +1,51 @@
-class HttpService {
+'use strict';
 
-    _handleErrors(response) {
-        if (!response.ok) {
-            throw new Error(response.statusText);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HttpService = function () {
+    function HttpService() {
+        _classCallCheck(this, HttpService);
+    }
+
+    _createClass(HttpService, [{
+        key: '_handleErrors',
+        value: function _handleErrors(response) {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            return response;
         }
+    }, {
+        key: 'get',
+        value: function get(url) {
+            var _this = this;
 
-        return response;
-    }
+            return fetch(url).then(function (response) {
+                return _this._handleErrors(response);
+            }).then(function (response) {
+                return response.json();
+            });
+        }
+    }, {
+        key: 'post',
+        value: function post(url, dados) {
+            var _this2 = this;
 
-    get(url) {
-        return fetch(url)
-            .then(response => this._handleErrors(response))
-            .then(response => response.json());
-    }
+            return fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify(dados)
+            }).then(function (response) {
+                return _this2._handleErrors(response);
+            });
+        }
+    }]);
 
-    post(url, dados) {
-
-        return fetch(url, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(dados)
-        })
-        .then(response => this._handleErrors(response));
-    }
-
-}
+    return HttpService;
+}();
+//# sourceMappingURL=HttpService.js.map
