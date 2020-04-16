@@ -1,41 +1,29 @@
 class HttpService {
 
+    _handleErrors(response) {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        return response;
+    }
+
     get(url) {
-        return new Promise((resolve, reject) => {
-
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', url);
-            xhr.onreadystatechange = () => {
-
-                if (xhr.readyState === 4) {
-                    
-                    xhr.status === 200 ?
-                        resolve(JSON.parse(xhr.responseText)) :
-                        reject(xhr.responseText);
-                }
-            };
-            xhr.send();
-        });
+        return fetch(url)
+            .then(response => this._handleErrors(response))
+            .then(response => response.json());
     }
 
     post(url, dados) {
-        return new Promise((resolve, reject) => {
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = () => {
-
-                if (xhr.readyState === 4) {
-
-                    xhr.status === 200 ?
-                        resolve(JSON.parse(xhr.responseText)) :
-                        reject(xhr.responseText);
-                }
-
-            };
-            xhr.send(JSON.stringify(dados));
-        });
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(dados)
+        })
+        .then(response => this._handleErrors(response));
     }
 
 }
